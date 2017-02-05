@@ -1,16 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class PlayerMove : MonoBehaviour {
+    private Player myPlayer;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    private void Start() {
+        myPlayer = GetComponent<Player>();
+    }
+
+    private void Update() {
+        float axisHorizontal = Input.GetAxis("Horizontal");
+        float axisVertical = Input.GetAxis("Vertical");
+        bool isAction = Input.GetButton("Action");
+
+        myPlayer.Move(axisHorizontal, axisVertical);
+
+        if (isAction) {
+            myPlayer.Action();
+        }
+    }
 }
