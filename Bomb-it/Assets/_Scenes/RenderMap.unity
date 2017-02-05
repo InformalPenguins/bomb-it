@@ -208,6 +208,10 @@ MonoBehaviour:
   blockPrefab: {fileID: 1184270286719282, guid: 70fff7f3389af4e0fb38755e0ce3fc61,
     type: 2}
   terrain: {fileID: 1593569262}
+  playerLocal: {fileID: 1201216774931252, guid: 4d2d0e10efab6a64fbaa844563ddd6e1,
+    type: 2}
+  playerRemote: {fileID: 1184858035094472, guid: 240e1a3fc82dacb4a9e664ceb3594896,
+    type: 2}
 --- !u!4 &1408071818
 Transform:
   m_ObjectHideFlags: 0
