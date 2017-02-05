@@ -5,4 +5,5 @@ using System.Collections.Generic;
 public class World {
     public List<int> blocks;
     public int rowSize;
+    public List<int> spawnPoints;
 }
