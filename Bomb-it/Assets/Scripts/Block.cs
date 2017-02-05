@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Block : MonoBehaviour {
 
+	public bool isDestructible;
+
 	// Use this for initialization
 	void Start () {
 		
