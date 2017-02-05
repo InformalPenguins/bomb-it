@@ -207,6 +207,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blockPrefab: {fileID: 1184270286719282, guid: 70fff7f3389af4e0fb38755e0ce3fc61,
     type: 2}
+  destructibleBlockPrefab: {fileID: 1388276608753702, guid: 21421cde317ae418e9b6d9792a14c582,
+    type: 2}
   terrain: {fileID: 1593569262}
   playerLocal: {fileID: 1201216774931252, guid: 4d2d0e10efab6a64fbaa844563ddd6e1,
     type: 2}
@@ -256,7 +258,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 828929aeaf1e435419cd3352f01e9b33, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

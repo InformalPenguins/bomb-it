@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class WorldRender : MonoBehaviour {
-	public GameObject blockPrefab, terrain, playerLocal, playerRemote;
+	public GameObject blockPrefab, destructibleBlockPrefab, terrain, playerLocal, playerRemote;
 	private List<GameObject> blocks;
 	private float blockSize = 0.1f;
 	private World world;
@@ -23,7 +23,7 @@ public class WorldRender : MonoBehaviour {
 			if (this.world.blocks[i] > 0) {
 				float x = getXPosition(i);
 				float z = getZPosition(i);
-				GameObject newBlock = Instantiate (blockPrefab, new Vector3 (x, 0.5f, z), Quaternion.identity);
+				GameObject newBlock = Instantiate (this.world.blocks[i] == 1 ? blockPrefab : destructibleBlockPrefab, new Vector3 (x, 0.5f, z), Quaternion.identity);
 				newBlock.GetComponent<Block> ().isDestructible = this.world.blocks[i] != 1;
 				blocks.Insert (i, newBlock);
 			}
