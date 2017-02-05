@@ -3,10 +3,10 @@ using System.IO;
 using UnityEngine;
 
 public static class JsonReader {
-    public static Worldx Read() {
+    public static World Read() {
         String worldFile = File.ReadAllText("Assets/map01.json");
 
-        Worldx myWorld = JsonUtility.FromJson<Worldx>(worldFile);
+        World myWorld = JsonUtility.FromJson<World>(worldFile);
 
         return myWorld;
     }
