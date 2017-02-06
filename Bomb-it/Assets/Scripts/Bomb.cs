@@ -23,21 +23,21 @@ public class Bomb : MonoBehaviour {
     }
 
     private void Blow() {
-        int currentPosition;
-
         // center
-        Instantiate(_fire, transform.position, Quaternion.identity);
-
-        int x = (int) transform.position.x;
-        int z = (int) transform.position.z;
+        Instantiate(_fire, new Vector3(
+                transform.position.x,
+                transform.position.y,
+                transform.position.z),
+            Quaternion.identity);
 
         // Right
 
         int step = 1;
-        while (step < _power) {
-            if (WR.World1.blocks[Position() + step] != 1) {
-                WR.World1.blocks[Position() + step] = 0;
-                Destroy(WR.Blocks[Position() + step]);
+        while (step <= _power) {
+            int blockFound = WR.MyWorld.blocks[Position() + step];
+
+            if (blockFound == 1) { // Wall
+                break;
             }
 
             Instantiate(_fire, new Vector3(
@@ -45,15 +45,23 @@ public class Bomb : MonoBehaviour {
                     transform.position.y,
                     transform.position.z),
                 Quaternion.identity);
+
+            if (blockFound == 2) { // Block
+                WR.Destroy(Position() + step);
+                break;
+            }
+
             step++;
         }
 
         // Left
-        step = 0;
-        while (step < _power) {
-            if (WR.World1.blocks[Position() - step] != 1) {
-                WR.World1.blocks[Position() - step] = 0;
-                Destroy(WR.Blocks[Position() - step]);
+
+        step = 1;
+        while (step <= _power) {
+            int blockFound = WR.MyWorld.blocks[Position() - step];
+
+            if (blockFound == 1) { // Wall
+                break;
             }
 
             Instantiate(_fire, new Vector3(
@@ -61,48 +69,62 @@ public class Bomb : MonoBehaviour {
                     transform.position.y,
                     transform.position.z),
                 Quaternion.identity);
+
+            if (blockFound == 2) { // Block
+                WR.Destroy(Position() - step);
+                break;
+            }
+
             step++;
         }
 
-//        // to Right
-//        currentPosition = 0;
-//        while (++currentPosition <= _power) {
-//            Instantiate(_fire, new Vector3(
-//                    transform.position.x + currentPosition,
-//                    transform.position.y,
-//                    transform.position.z),
-//                Quaternion.identity);
-//        }
-//
-//        // to Left
-//        currentPosition = 0;
-//        while (++currentPosition <= _power) {
-//            Instantiate(_fire, new Vector3(
-//                    transform.position.x - currentPosition,
-//                    transform.position.y,
-//                    transform.position.z),
-//                Quaternion.identity);
-//        }
-//
-//        // to Up
-//        currentPosition = 0;
-//        while (++currentPosition <= _power) {
-//            Instantiate(_fire, new Vector3(
-//                    transform.position.x,
-//                    transform.position.y,
-//                    transform.position.z - currentPosition),
-//                Quaternion.identity);
-//        }
-//
-//        // to Down
-//        currentPosition = 0;
-//        while (++currentPosition <= _power) {
-//            Instantiate(_fire, new Vector3(
-//                    transform.position.x,
-//                    transform.position.y,
-//                    transform.position.z + currentPosition),
-//                Quaternion.identity);
-//        }
+        // Up
+
+        step = 1;
+        while (step <= _power) {
+            int blockFound = WR.MyWorld.blocks[Position() + step * WR.MyWorld.rowSize];
+
+            if (blockFound == 1) { // Wall
+                break;
+            }
+
+            Instantiate(_fire, new Vector3(
+                    transform.position.x,
+                    transform.position.y,
+                    transform.position.z + step),
+                Quaternion.identity);
+
+            if (blockFound == 2) { // Block
+                WR.Destroy(Position() + step * WR.MyWorld.rowSize);
+                break;
+            }
+
+            step++;
+        }
+
+        // Down
+
+        step = 1;
+        while (step <= _power) {
+            int blockFound = WR.MyWorld.blocks[Position() - step * WR.MyWorld.rowSize];
+
+            if (blockFound == 1) { // Wall
+                break;
+            }
+
+            Instantiate(_fire, new Vector3(
+                    transform.position.x,
+                    transform.position.y,
+                    transform.position.z - step),
+                Quaternion.identity);
+
+            if (blockFound == 2) { // Block
+                WR.Destroy(Position() - step * WR.MyWorld.rowSize);
+                break;
+            }
+
+            step++;
+        }
 
         Destroy(gameObject);
     }

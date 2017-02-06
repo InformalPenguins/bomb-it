@@ -1,65 +1,89 @@
-﻿using System.Collections;
+﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class WorldRender : MonoBehaviour {
-	public GameObject blockPrefab, destructibleBlockPrefab, terrain, playerLocal, playerRemote, floor;
-	private List<GameObject> blocks;
-	private float blockSize = 0.1f;
-	private World world;
+    [SerializeField] private GameObject _playerLocal;
 
-    public List<GameObject> Blocks {
-        get { return blocks; }
+    [SerializeField] private GameObject _playerRemote;
+
+    [SerializeField] private GameObject _floor;
+
+    [SerializeField] private GameObject _wall; // non destroyable
+
+    [SerializeField] private GameObject _block; // destroyable
+
+    private World _myWorld;
+
+    private List<GameObject> _gameGameBlocks;
+
+    public List<GameObject> GameBlocks {
+        get { return _gameGameBlocks; }
     }
 
-    public World World1 {
-        get { return world; }
+    public World MyWorld {
+        get { return _myWorld; }
     }
 
     // Use this for initialization
-	void Start () {
-		this.world = JsonReader.Read ();
+    void Start() {
+        _myWorld = JsonReader.Read();
 
-		int rows = this.World1.blocks.Count / this.World1.rowSize;
+        int rows = _myWorld.blocks.Count / _myWorld.rowSize;
 
-		blocks = new List<GameObject> (new GameObject[rows * this.World1.rowSize]);
+        _gameGameBlocks = new List<GameObject>(new GameObject[rows * _myWorld.rowSize]);
 
-		int i;
-	    for (i = 0; i < this.World1.blocks.Count; i++) {
-	        GameObject baseBlock;
+        int idx = 0;
+        _myWorld.blocks.ForEach(block => {
+            GameObject baseBlock;
 
-	        if (this.World1.blocks[i] == 1) {
-	            baseBlock = blockPrefab;
-	        } else if (this.World1.blocks[i] == 2) {
-	            baseBlock = destructibleBlockPrefab;
-	        } else {
-	            baseBlock = floor;
-	        }
+            if (_myWorld.blocks[idx] == 1) {
+                baseBlock = _wall;
+            } else if (_myWorld.blocks[idx] == 2) {
+                baseBlock = _block;
+            } else {
+                baseBlock = _floor;
+            }
 
-	        float x = getXPosition(i);
-	        float z = getZPosition(i);
-	        GameObject newBlock = Instantiate(baseBlock, new Vector3(x, baseBlock.transform.position.y, z), Quaternion.identity);
-	        Blocks.Insert(i, newBlock);
-	    }
+            Vector3 newBlockPosition = CalculatePosition(idx);
+            newBlockPosition.y = baseBlock.transform.position.y;
 
-		spawnPlayer (false);
-	}
+            GameObject newBlock = Instantiate(baseBlock, newBlockPosition, Quaternion.identity);
 
-	// Update is called once per frame
-	void Update () {
+            _gameGameBlocks.Insert(idx, newBlock);
 
-	}
+            idx++;
+        });
 
-	float getXPosition(float index) {
-	    return index % this.World1.rowSize; //- this.world.blocks.Count / this.world.rowSize / 2;
-	}
+        spawnPlayer(false);
+    }
 
-	float getZPosition(float index) {
-	    return Mathf.Floor(index / this.World1.rowSize); //- this.world.rowSize / 2;
-	}
+    public void Destroy(int position) {
+        Vector3 newBlockPosition = CalculatePosition(position);
+        newBlockPosition.y = _floor.transform.position.y;
+        GameObject newFloorBlock = Instantiate(_floor, newBlockPosition, Quaternion.identity);
 
-	GameObject spawnPlayer(bool remote) {
-		int spawnPoint = World1.spawnPoints[(int)Random.Range (0.0f, World1.spawnPoints.Count)];
-		return Instantiate (remote ? playerRemote : playerLocal, new Vector3 (getXPosition(spawnPoint), 2.0f, getZPosition(spawnPoint)), Quaternion.identity);
-	}
+        Destroy(_gameGameBlocks[position]);
+
+        _gameGameBlocks[position] = newFloorBlock;
+        _myWorld.blocks[position] = 0;
+    }
+
+    private Vector3 CalculatePosition(float linealPosition) {
+        float x = linealPosition % _myWorld.rowSize;
+        // ReSharper disable once PossibleLossOfFraction
+        float z = Mathf.Floor(linealPosition / _myWorld.rowSize);
+
+        return new Vector3(x, 0f, z);
+    }
+
+    private GameObject spawnPlayer(bool remote) {
+        int spawnPoint = MyWorld.spawnPoints[(int) Random.Range(0.0f, MyWorld.spawnPoints.Count)];
+        Vector3 spawnPosition = CalculatePosition(spawnPoint);
+        spawnPosition.y = 2f;
+
+        return Instantiate(remote ? _playerRemote : _playerLocal, spawnPosition, Quaternion.identity);
+    }
 }
