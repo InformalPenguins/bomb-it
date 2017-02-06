@@ -7,13 +7,18 @@ public class Bomb : MonoBehaviour {
 
     [SerializeField] private GameObject _fire;
 
-    private WorldRender WR;
+    private WorldRenderer _wr;
 
     private void Awake() { Invoke("Blow", _duration); }
 
-    private void Start() { WR = GameObject.FindGameObjectWithTag("WorldGenerator").GetComponent<WorldRender>(); }
+    private void Start() { _wr = GameObject.FindGameObjectWithTag("WorldGenerator").GetComponent<WorldRenderer>(); }
 
-    private void Update() { }
+    private void OnTriggerEnter(Collider other) {
+        if (other.gameObject.layer == 12) { // fire
+            CancelInvoke("Blow");
+            Blow();
+        }
+    }
 
     private int Position() {
         int x = (int) transform.position.x;
@@ -34,7 +39,7 @@ public class Bomb : MonoBehaviour {
 
         int step = 1;
         while (step <= _power) {
-            int blockFound = WR.MyWorld.blocks[Position() + step];
+            int blockFound = _wr.MyWorld.blocks[Position() + step];
 
             if (blockFound == 1) { // Wall
                 break;
@@ -47,7 +52,7 @@ public class Bomb : MonoBehaviour {
                 Quaternion.identity);
 
             if (blockFound == 2) { // Block
-                WR.Destroy(Position() + step);
+                _wr.Destroy(Position() + step);
                 break;
             }
 
@@ -58,7 +63,7 @@ public class Bomb : MonoBehaviour {
 
         step = 1;
         while (step <= _power) {
-            int blockFound = WR.MyWorld.blocks[Position() - step];
+            int blockFound = _wr.MyWorld.blocks[Position() - step];
 
             if (blockFound == 1) { // Wall
                 break;
@@ -71,7 +76,7 @@ public class Bomb : MonoBehaviour {
                 Quaternion.identity);
 
             if (blockFound == 2) { // Block
-                WR.Destroy(Position() - step);
+                _wr.Destroy(Position() - step);
                 break;
             }
 
@@ -82,7 +87,7 @@ public class Bomb : MonoBehaviour {
 
         step = 1;
         while (step <= _power) {
-            int blockFound = WR.MyWorld.blocks[Position() + step * WR.MyWorld.rowSize];
+            int blockFound = _wr.MyWorld.blocks[Position() + step * _wr.MyWorld.rowSize];
 
             if (blockFound == 1) { // Wall
                 break;
@@ -95,7 +100,7 @@ public class Bomb : MonoBehaviour {
                 Quaternion.identity);
 
             if (blockFound == 2) { // Block
-                WR.Destroy(Position() + step * WR.MyWorld.rowSize);
+                _wr.Destroy(Position() + step * _wr.MyWorld.rowSize);
                 break;
             }
 
@@ -106,7 +111,7 @@ public class Bomb : MonoBehaviour {
 
         step = 1;
         while (step <= _power) {
-            int blockFound = WR.MyWorld.blocks[Position() - step * WR.MyWorld.rowSize];
+            int blockFound = _wr.MyWorld.blocks[Position() - step * _wr.MyWorld.rowSize];
 
             if (blockFound == 1) { // Wall
                 break;
@@ -119,7 +124,7 @@ public class Bomb : MonoBehaviour {
                 Quaternion.identity);
 
             if (blockFound == 2) { // Block
-                WR.Destroy(Position() - step * WR.MyWorld.rowSize);
+                _wr.Destroy(Position() - step * _wr.MyWorld.rowSize);
                 break;
             }
 

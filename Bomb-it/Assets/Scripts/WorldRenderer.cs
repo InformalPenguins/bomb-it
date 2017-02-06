@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class WorldRender : MonoBehaviour {
+public class WorldRenderer : MonoBehaviour {
     [SerializeField] private GameObject _playerLocal;
 
     [SerializeField] private GameObject _playerRemote;
@@ -28,7 +26,7 @@ public class WorldRender : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start() {
+    private void Start() {
         _myWorld = JsonReader.Read();
 
         int rows = _myWorld.blocks.Count / _myWorld.rowSize;
@@ -60,6 +58,22 @@ public class WorldRender : MonoBehaviour {
         spawnPlayer(false);
     }
 
+    private Vector3 CalculatePosition(float linealPosition) {
+        float x = linealPosition % _myWorld.rowSize;
+        // ReSharper disable once PossibleLossOfFraction
+        float z = Mathf.Floor(linealPosition / _myWorld.rowSize);
+
+        return new Vector3(x, 0f, z);
+    }
+
+    private void spawnPlayer(bool remote) {
+        int spawnPoint = MyWorld.spawnPoints[(int) Random.Range(0.0f, MyWorld.spawnPoints.Count)];
+        Vector3 spawnPosition = CalculatePosition(spawnPoint);
+        spawnPosition.y = 2f;
+
+        Instantiate(remote ? _playerRemote : _playerLocal, spawnPosition, Quaternion.identity);
+    }
+
     public void Destroy(int position) {
         Vector3 newBlockPosition = CalculatePosition(position);
         newBlockPosition.y = _floor.transform.position.y;
@@ -69,21 +83,5 @@ public class WorldRender : MonoBehaviour {
 
         _gameGameBlocks[position] = newFloorBlock;
         _myWorld.blocks[position] = 0;
-    }
-
-    private Vector3 CalculatePosition(float linealPosition) {
-        float x = linealPosition % _myWorld.rowSize;
-        // ReSharper disable once PossibleLossOfFraction
-        float z = Mathf.Floor(linealPosition / _myWorld.rowSize);
-
-        return new Vector3(x, 0f, z);
-    }
-
-    private GameObject spawnPlayer(bool remote) {
-        int spawnPoint = MyWorld.spawnPoints[(int) Random.Range(0.0f, MyWorld.spawnPoints.Count)];
-        Vector3 spawnPosition = CalculatePosition(spawnPoint);
-        spawnPosition.y = 2f;
-
-        return Instantiate(remote ? _playerRemote : _playerLocal, spawnPosition, Quaternion.identity);
     }
 }

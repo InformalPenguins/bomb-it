@@ -24,10 +24,20 @@ public class Player : MonoBehaviour {
 
     private void EnableAction() { canAct = true; }
 
+    private void OnTriggerEnter(Collider other) {
+        if (other.gameObject.layer == 12) { // fire
+            Die();
+        }
+    }
+
     private void OnTriggerExit(Collider other) {
         if (other.transform.gameObject.layer == 10) { // Bomb
             other.transform.GetComponent<Collider>().isTrigger = false;
         }
+    }
+
+    public void Die() {
+        Destroy(gameObject);
     }
 
     public void Move(float axisHorizontal, float axisVertical) {
