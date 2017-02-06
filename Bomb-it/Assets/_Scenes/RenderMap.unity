@@ -150,7 +150,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: -1
   m_CullingMask:
@@ -172,7 +172,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1042667646}
   m_LocalRotation: {x: 0.46174863, y: 0, z: 0, w: 0.8870109}
-  m_LocalPosition: {x: 0, y: 7, z: -7}
+  m_LocalPosition: {x: 3, y: 7, z: -2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 1408071817}
   m_Layer: 0
   m_Name: World
-  m_TagString: Untagged
+  m_TagString: WorldGenerator
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -214,6 +214,7 @@ MonoBehaviour:
     type: 2}
   playerRemote: {fileID: 1184858035094472, guid: 240e1a3fc82dacb4a9e664ceb3594896,
     type: 2}
+  floor: {fileID: 1310339718349326, guid: 45930058111059747b8371a2ce67c290, type: 2}
 --- !u!4 &1408071818
 Transform:
   m_ObjectHideFlags: 0
